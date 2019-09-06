@@ -11,10 +11,11 @@
   :license {:name "Eclipse Public License - v 1.0"
           :url "http://www.eclipse.org/legal/epl-v10.html"
           :distribution :repo
-          :comments "same as Clojure"}
-  :deploy-repositories {"releases"
-                        {:url "https://repo.clojars.org"
-                         :creds :gpg}}
+            :comments "same as Clojure"}
+
+  :deploy-repositories [["clojars"
+                         {:url           "https://clojars.org/repo"
+                          :sign-releases false}]]
   :dependencies [[org.clojure/tools.reader "1.1.2"]
                     [org.clojure/tools.cli "0.3.5"]
                     [org.clojure/tools.logging "0.4.0"]
