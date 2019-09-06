@@ -1,18 +1,18 @@
-(defproject lein-cloverage "1.1.2-SNAPSHOT"
+(defproject camsaul/lein-cloverage "1.1.2"
   :description "Lein plugin for cloverage"
-  :url "https://github.com/cloverage/cloverage"
+  :url "https://github.com/camsaul/cloverage"
   :scm {:name "git"
       :dir  ".."
-      :url  "https://www.github.com/cloverage/cloverage"
+      :url  "https://www.github.com/camsaul/cloverage"
       :tag  "HEAD"}
   :vcs :git
   :license {:name "Eclipse Public License - v 1.0"
             :url "http://www.eclipse.org/legal/epl-v10.html"
             :distribution :repo
             :comments "same as Clojure"}
-  :deploy-repositories {"releases"
-                        {:url "https://repo.clojars.org"
-                         :creds :gpg}}
+  :deploy-repositories [["clojars"
+                         {:url           "https://clojars.org/repo"
+                          :sign-releases false}]]
   :lein-release {:scm :git ; Because we're not in the top-level directory, so it doesn't auto-detect
                  :deploy-via :clojars}
   :release-tasks [["vcs" "assert-committed"]
