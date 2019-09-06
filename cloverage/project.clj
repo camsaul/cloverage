@@ -1,9 +1,9 @@
-(defproject cloverage "1.1.2-SNAPSHOT"
-  :description "Form-level test coverage for clojure."
-  :url "https://www.github.com/cloverage/cloverage"
+(defproject camsaul/cloverage "1.1.2"
+  :description "Cam's fork of Cloverage; adds support for deftype forms."
+  :url "https://www.github.com/camsaul/cloverage"
   :scm {:name "git"
           :dir  ".."
-          :url  "https://www.github.com/cloverage/cloverage"
+          :url  "https://www.github.com/camsaul/cloverage"
           :tag  "HEAD"}
   :vcs :git
   :main ^:skip-aot cloverage.coverage
