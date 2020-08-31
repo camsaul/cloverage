@@ -258,55 +258,19 @@
     (t/testing "(. class-or-instance (method & args)) syntax"
       (t/is (= '(do (. clojure.lang.RT (count (do [(do 3) (do 4)]))))
                (rw/macroexpand-all (inst/instrument-form #'inst/nop nil '(. clojure.lang.RT (count [3 4])))))))
-    (t/testing "class-or-instance part of Java interop form should get instrumented (#306)"
+    (t/testing "class-or-instance part of Java interop form should get instrumented if not a class or symbol (#306)"
       (t/is (= '(do (. (do (let* [x (do 1)]
-                                 (do ((do str)
-                                      (do "X is")
-                                      (do x)))
-                                 (do (. Thread currentThread))))
+                             (do ((do str)
+                                  (do "X is")
+                                  (do x)))
+                             (do (. Thread currentThread))))
                        getName))
                (rw/macroexpand-all (inst/instrument-form #'inst/nop nil '(.getName (let [x 1]
                                                                                      (str "X is" x)
-                                                                                     (Thread/currentThread))))))))))
-
-(t/deftest instrument-inlined-primitives-test
-  (t/testing "Inline primitive cast functions like int() should be instrumented correctly (#277)"
-    (t/is (= '(. clojure.lang.RT (intCast 2))
-             (rw/macroexpand-all (inst/instrument-form #'inst/no-instr nil '(int 2)))
-             (rw/macroexpand-all (inst/instrument-form #'inst/no-instr nil `(int 2)))))
-    (t/testing "make sure example in #277 actually gets instrumented and doesn't fall back to returning the original form"
-      (let [form '(deftype MyType [^:unsynchronized-mutable ^int i]
-                    clojure.lang.IHashEq
-                    (hasheq [_]
-                      (set! i (int 2))))]
-        (t/is (not= form
-                    (inst/instrument-form #'inst/no-instr nil form)))))
-    (t/testing "Non-inlineable uses of functions like `int` should get instrumented normally"
-      (t/is (= `(map int [1])
-               (rw/macroexpand-all (inst/instrument-form #'inst/no-instr nil `(map int [1]))))))
-    (t/testing "For functions that are sometimes inlined (e.g `+`) make sure we instrument it appropriately in both cases"
-      (t/testing "Not inlined"
-        (t/is (= '(do ((do +) (do 1)))
-                 (rw/macroexpand-all (inst/instrument-form #'inst/nop nil '(+ 1))))))
-      (t/is (= '(do (. clojure.lang.Numbers (add (do 1) (do 2))))
-               (rw/macroexpand-all (inst/instrument-form #'inst/nop nil '(+ 1 2)))))
-      (t/is (= '(do (. clojure.lang.Numbers (add (do ((do identity) (do 1))) (do 2))))
-               (rw/macroexpand-all (inst/instrument-form #'inst/nop nil '(+ (identity 1) 2))))))
-    (t/testing "Inlined calls inside inlined calls should get instrumented correctly"
-      (t/is (= '(do
-                  (. clojure.lang.Numbers
-                     (add (do 1)
-                          (do (. clojure.lang.RT (clojure.core/count (do [(do 2) (do (if (do *print-meta*)
-                                                                                       (do 3)
-                                                                                       (do 4)))])))))))
-               (rw/macroexpand-all (inst/instrument-form #'inst/nop nil '(+ 1 (count [2 (if *print-meta* 3 4)]))))))
-      (t/is (= `(do (.
-                     clojure.lang.Util
-                     clojure.core/equiv
-                     (do (.
-                          clojure.lang.RT
-                          (clojure.core/count (do [(do 1) (do 2)]))))
-                     (do (.
-                          clojure.lang.RT
-                          (clojure.core/count (do [(do 3) (do 4)]))))))
-               (rw/macroexpand-all (inst/instrument-form #'inst/nop nil '(= (count [1 2]) (count [3 4])))))))))
+                                                                                     (Thread/currentThread)))))))
+      (t/testing "Class should not get instrumented (#309)"
+        (let [form (list '. clojure.lang.RT 'nth [:a :b :c] 0 nil)]
+          (t/is (= :a
+                   (eval form)))
+          (t/is (= (list 'do (list '. clojure.lang.RT 'nth '(do [(do :a) (do :b) (do :c)]) '(do 0) '(do nil)))
+                   (rw/macroexpand-all (inst/instrument-form #'inst/nop nil form)))))))))
