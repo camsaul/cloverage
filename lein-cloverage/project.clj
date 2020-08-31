@@ -1,4 +1,4 @@
-(defproject camsaul/lein-cloverage "1.2.1"
+(defproject camsaul/lein-cloverage "1.2.1.1"
   :description "Lein plugin for cloverage"
   :url "https://github.com/cloverage/cloverage"
   :scm {:name "git"

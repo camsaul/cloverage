@@ -1,4 +1,4 @@
-(defproject camsaul/cloverage "1.2.1"
+(defproject camsaul/cloverage "1.2.1.1"
   :description "Form-level test coverage for clojure."
   :url "https://www.github.com/cloverage/cloverage"
   :scm {:name "git"
