@@ -9,7 +9,7 @@
 
 (defn already-has-cloverage? [project]
   (seq (for [[id _version] (:dependencies project)
-             :when (= id 'cloverage/cloverage)]
+             :when (= id 'camsaul/cloverage)]
          true)))
 
 (defn ^:pass-through-help cloverage
@@ -25,7 +25,7 @@
         project        (if (already-has-cloverage? project)
                          project
                          (update-in project [:dependencies]
-                                    conj ['cloverage (get-lib-version)]))
+                                    conj ['camsaul/cloverage (get-lib-version)]))
         test-selectors (:test-selectors project)
         opts           (assoc (:cloverage project)
                               :src-ns-path (vec (:source-paths project))

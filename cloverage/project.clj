@@ -1,4 +1,4 @@
-(defproject cloverage "1.2.1-SNAPSHOT"
+(defproject camsaul/cloverage "1.2.1"
   :description "Form-level test coverage for clojure."
   :url "https://www.github.com/cloverage/cloverage"
   :scm {:name "git"
@@ -11,8 +11,11 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"
             :distribution :repo
             :comments "same as Clojure"}
-  :deploy-repositories [["releases" :clojars]
-                        ["snapshots" :clojars]]
+  :deploy-repositories [["clojars"
+                         {:url           "https://clojars.org/repo"
+                          :sign-releases false
+                          :username "camsaul"
+                          :password :env/camsaul_cloverage_deploy_token}]]
   :dependencies [[org.clojure/tools.reader "1.3.3"]
                  [org.clojure/tools.cli "0.4.2"]
                  [org.clojure/tools.logging "0.5.0"]
